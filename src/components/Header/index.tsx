@@ -14,11 +14,11 @@ export default function Header() {
             <h1 className="text-[48px] text-black truncate">BiblioTech</h1>
           </div>
           <nav className="flex gap-8 text-gray-400 text-2xl items-center">
-            <Link href="/">Edição</Link>
-            <Link href="/livros">Livros</Link>
-            <Link href="/">Escritores</Link>
-            <Link href="/">Usuário</Link>
-            <CircleUser className="w-15 h-15" strokeWidth={1.5}/>
+            <Link href="/" className="hover:text-green-400 transition-colors">Edição</Link>
+            <Link href="/livros" className="hover:text-green-400 transition-colors">Livros</Link>
+            <Link href="/" className="hover:text-green-400 transition-colors">Escritores</Link>
+            <Link href="/" className="hover:text-green-400 transition-colors">Usuário</Link>
+            <CircleUser className="w-15 h-15 text-gray-400 hover:text-green-400 transition-colors cursor-pointer" strokeWidth={1.5}/>
           </nav>
         </div>
       </div>
