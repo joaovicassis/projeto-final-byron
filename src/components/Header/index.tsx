@@ -13,7 +13,7 @@ export default function Header() {
             </Link>
             <h1 className="text-[48px] text-black truncate">BiblioTech</h1>
           </div>
-          <nav className="flex flex-wrap gap-8 text-gray-400 text-2xl items-center">
+          <nav className="flex gap-8 text-gray-400 text-2xl items-center">
             <Link href="/">Edição</Link>
             <Link href="/livros">Livros</Link>
             <Link href="/">Escritores</Link>
