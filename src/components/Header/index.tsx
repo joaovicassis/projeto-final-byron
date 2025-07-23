@@ -4,7 +4,7 @@ import { CircleUser } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="w-full bg-white shadow-md">
+    <header className="w-full bg-white mb-1 shadow-md">
       <div className="w-full px-6 py-4">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4 min-w-0">
@@ -18,7 +18,7 @@ export default function Header() {
             <Link href="/livros" className="hover:text-green-400 transition-colors">Livros</Link>
             <Link href="/" className="hover:text-green-400 transition-colors">Escritores</Link>
             <Link href="/" className="hover:text-green-400 transition-colors">Usuário</Link>
-            <CircleUser className="w-15 h-15 text-gray-400 hover:text-green-400 transition-colors cursor-pointer" strokeWidth={1.5}/>
+            <CircleUser className="w-15 h-15 text-gray-400 hover:text-green-400 transition-colors cursor-pointer" strokeWidth={1.5} />
           </nav>
         </div>
       </div>
