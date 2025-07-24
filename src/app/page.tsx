@@ -3,10 +3,12 @@ import { useRef, useState } from "react";
 import { books } from "../app/lib/livros"
 import Carousel from "../components/Carousel";
 import Link from "next/link";
+import { AuthProvider, useAuth } from "./lib/AuthContext";
 
 export default function Home() {
   const carouselData = useRef(books);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const { isLoggedIn } = useAuth();
 
   return (
     <div className="flex-grow bg-green-50">
@@ -26,14 +28,19 @@ export default function Home() {
           setActiveItemIndex={setActiveItemIndex}
           carouselData={carouselData.current}
         />
-        <div className="container mt-8 mb-16 w-full flex justify-center">
-          <button
-            onClick={() => console.log("Adicionar livro")}
-            className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
-          >
-            + Adicionar Livro
-          </button>
-        </div>
+        
+          <div className="container mt-8 mb-16 w-full flex justify-center">
+            {isLoggedIn && (
+            <button
+              onClick={() => console.log("Adicionar livro")}
+              className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
+            >
+              + Adicionar Livro
+            </button>
+            )}
+          </div>
+        
+
       </section>
     </div>
   );

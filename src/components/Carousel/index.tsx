@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from "lucide-react";
+import { useAuth } from "@/src/app/lib/AuthContext";
+
 
 // tipagem das props esperadas
 type CarouselItem = {
@@ -67,6 +69,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
         return () => clearTimeout(timeoutId);
     }, [activeItemIndex]);
 
+    const { isLoggedIn } = useAuth();
+
     return (
         <div className="flex items-center gap-3">
 
@@ -95,7 +99,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                         <p className="text-gray-400 text-sm">
                             {carouselData[getCircularIndex(activeItemIndex, carouselData.length)].releaseDate}
                         </p>
-                        <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+                        {isLoggedIn && (
+                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
                                 <button
                                     onClick={() =>
                                         console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
@@ -116,6 +121,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                                     <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
                                 </button>
                             </div>
+                        )}
+
                     </div>
                 </div>
 
@@ -138,7 +145,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                         <p className="text-gray-400 text-sm">
                             {carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].releaseDate}
                         </p>
-                        <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+                        {isLoggedIn && (
+                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
                                 <button
                                     onClick={() =>
                                         console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
@@ -159,6 +167,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                                     <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
                                 </button>
                             </div>
+                        )}
                     </div>
                 </div>
 
@@ -181,7 +190,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                         <p className="text-gray-400 text-sm">
                             {carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].releaseDate}
                         </p>
-                        <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+                        {isLoggedIn && (
+                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
                                 <button
                                     onClick={() =>
                                         console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
@@ -202,6 +212,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                                     <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
                                 </button>
                             </div>
+                        )}
                     </div>
                 </div>
 
@@ -224,7 +235,9 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                         <p className="text-gray-400 text-sm">
                             {carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].releaseDate}
                         </p>
-                        <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+
+                        {isLoggedIn && (
+                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
                                 <button
                                     onClick={() =>
                                         console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
@@ -245,6 +258,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                                     <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
                                 </button>
                             </div>
+                        )}
+
                     </div>
                 </div>
 
@@ -267,7 +282,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                         <p className="text-gray-400 text-sm">
                             {carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].releaseDate}
                         </p>
-                        <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+                        {isLoggedIn && (
+                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
                                 <button
                                     onClick={() =>
                                         console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
@@ -288,6 +304,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                                     <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
                                 </button>
                             </div>
+                        )}
+
                     </div>
                 </div>
 
@@ -310,7 +328,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                         <p className="text-gray-400 text-sm">
                             {carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].releaseDate}
                         </p>
-                        <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+                        {isLoggedIn && (
+                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
                                 <button
                                     onClick={() =>
                                         console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
@@ -331,6 +350,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                                     <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
                                 </button>
                             </div>
+                        )}
+
                     </div>
                 </div>
             </div>
