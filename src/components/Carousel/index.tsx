@@ -67,7 +67,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
     }, [activeItemIndex]);
 
     return (
-        <div className="flex gap-20 items-center">
+        <div className="flex items-center gap-3">
 
             <button onClick={back} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-white bg-black bg-opacity-20 hover:bg-opacity-60 duration-200">
                 {"<"}
