@@ -43,6 +43,6 @@ export const books: Book[] = [
     genre: "Fantasia",
     releaseDate: "29/07/1954",
     synopsis: "A primeira parte da trilogia épica em que Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média.",
-    coverImage: "/livros/kamasutra.png"
+    coverImage: "/livros/cao.png"
   }
 ]

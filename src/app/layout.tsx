@@ -5,10 +5,8 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"]
-})
-
+});
 
 export const metadata: Metadata = {
   title: "Bibliotech",
@@ -22,9 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${inter.variable}  antialiased min-h-screen flex flex-col`}>
-        <Header/>
+      <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
+        <Header />
         {children}
         <Footer/>
       </body>
