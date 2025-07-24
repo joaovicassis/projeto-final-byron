@@ -5,7 +5,7 @@ import { CircleUser } from "lucide-react";
 import { useAuth } from "@/src/app/lib/AuthContext";
 
 export default function Header() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, login } = useAuth();
 
   return (
     <header className="w-full bg-white py-4 mb-1 shadow-md">
@@ -28,7 +28,12 @@ export default function Header() {
                 <CircleUser className="w-15 h-15 text-gray-400 hover:text-green-400 transition-colors cursor-pointer" strokeWidth={1.5} />
               </>
             ) : (
-              <Link href="/" className="hover:text-green-400 transition-colors">Registrar</Link>
+              <button
+                onClick={ login }
+                className="hover:text-green-400 transition-colors text-2xl"
+              >
+                Registrar
+              </button>
             )}
           </nav>
         </div>

@@ -21,7 +21,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full grid place-items-center overflow-hidden gap-6">
+      <section className="w-full grid place-items-center overflow-hidden gap-3">
         <h1 className="text-[64px]">Catálogo</h1>
         <Carousel
           activeItemIndex={activeItemIndex}
@@ -29,7 +29,7 @@ export default function Home() {
           carouselData={carouselData.current}
         />
         
-          <div className="container mt-8 mb-16 w-full flex justify-center">
+          <div className="container mb-10 w-full flex justify-center">
             {isLoggedIn && (
             <button
               onClick={() => console.log("Adicionar livro")}
