@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // tipagem das props esperadas
 type CarouselItem = {
@@ -69,8 +70,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
     return (
         <div className="flex items-center gap-3">
 
-            <button onClick={back} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-white bg-black bg-opacity-20 hover:bg-opacity-60 duration-200">
-                {"<"}
+            <button onClick={back} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-black bg-white hover:bg-green-400 bg-opacity-20 hover:bg-opacity-60 duration-200">
+                <ChevronLeft />
             </button>
 
             <div className="grid grid-cols-3 gap-20">
@@ -208,8 +209,8 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                 </div>
             </div>
             <button
-                onClick={forward} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-white bg-black bg-opacity-20 hover:bg-opacity-60 duration-200">
-                {">"}
+                onClick={forward} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-black bg-white hover:bg-green-400 hover:bg-opacity-60 duration-200">
+                <ChevronRight />
             </button>
         </div>
     );
