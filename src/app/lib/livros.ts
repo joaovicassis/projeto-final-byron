@@ -10,7 +10,7 @@ export type Book = {
 
 export const books: Book[] = [
   {
-    id: "1",
+    id: "0",
     title: "1984",
     author: "George Orwell",
     genre: "Distopia",
@@ -19,7 +19,7 @@ export const books: Book[] = [
     coverImage: "/livros/1984.png"
   },
   {
-    id: "2",
+    id: "1",
     title: "Dom Casmurro",
     author: "Machado de Assis",
     genre: "Romance",
@@ -28,12 +28,21 @@ export const books: Book[] = [
     coverImage: "/livros/domCasmurro.png"
   },
   {
-    id: "3",
+    id: "2",
     title: "O Senhor dos Anéis: A Sociedade do Anel",
     author: "J.R.R. Tolkien",
     genre: "Fantasia",
     releaseDate: "29/07/1954",
     synopsis: "A primeira parte da trilogia épica em que Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média.",
-    coverImage: "/receitas/senhorDosAneis.png"
+    coverImage: "/livros/senhorDosAneis.png"
+  },
+  {
+    id: "3",
+    title: "Turma da Mônica",
+    author: "J.R.R. Tolkien",
+    genre: "Fantasia",
+    releaseDate: "29/07/1954",
+    synopsis: "A primeira parte da trilogia épica em que Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média.",
+    coverImage: "/livros/cao.png"
   }
 ]
