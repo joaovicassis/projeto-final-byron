@@ -3,360 +3,116 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from "lucide-react";
 import { useAuth } from "@/src/app/lib/AuthContext";
 
-
-// tipagem das props esperadas
+// Adicionamos 'id' ao tipo e a prop 'onDelete'
 type CarouselItem = {
+    id: string; // ID é necessário para a exclusão
     coverImage: string;
     title: string;
     author: string;
-    releaseDate: string
+    releaseDate: string;
 };
 
 type CarouselProps = {
     activeItemIndex: number;
     setActiveItemIndex: React.Dispatch<React.SetStateAction<number>>;
     carouselData: CarouselItem[];
+    onDelete: (id: string) => void; // A prop que funciona como "fio elétrico"
 };
 
-const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: CarouselProps) => {
-    const getCircularIndex = (index: number, arrayLength: number) => {
-        if (index < 0) {
-            return arrayLength + (index % arrayLength)
-        }
+// Adicionamos 'onDelete' às props do componente
+const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData, onDelete }: CarouselProps) => {
+    const { isLoggedIn } = useAuth();
 
-        return index % arrayLength
-    }
+    // Função para garantir que o índice seja sempre válido
+    const getCircularIndex = (index: number) => {
+        if (carouselData.length === 0) return 0;
+        return (index % carouselData.length + carouselData.length) % carouselData.length;
+    };
 
     const forward = () => {
-        // passa pra proxima imagem
-        // se o itemAtivo diferente do tamnaho total - 1
-        // 2 !== 3 - 1
-        if (activeItemIndex !== carouselData.length - 1) {
-            setActiveItemIndex((prevIndex: number) => prevIndex + 1);
-        }
+        if (carouselData.length === 0) return;
+        setActiveItemIndex((prevIndex) => (prevIndex + 1) % carouselData.length);
+    };
 
-        if (activeItemIndex === carouselData.length - 1) {
-            setActiveItemIndex(0);
-        }
-    }
-
-    // passa pra imagem anterior
-    // se o item ativo for diferente de 0
-    // 0 !== 0
     const back = () => {
-        if (activeItemIndex !== 0) {
-            setActiveItemIndex((prevIndex: number) => prevIndex - 1);
-        }
+        if (carouselData.length === 0) return;
+        setActiveItemIndex((prevIndex) => (prevIndex - 1 + carouselData.length) % carouselData.length);
+    };
 
-        if (activeItemIndex == 0) {
-            setActiveItemIndex(carouselData.length - 1);
-        }
-    }
-
+    // Lógica de auto-play (simplificada e corrigida)
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            // o itemAtivo (0) === tamanho total - 1
-            // o itemAtivo (1) === tamanho total - 1 (3 - 1 =2 )
-            // o itemAtivo (2) === 2
-            if (activeItemIndex === carouselData.length - 1) {
-                {/* */ }
-                setActiveItemIndex(0);
-            } else {
-                forward();
-            }
-        }, 5000);
+        if (carouselData.length === 0) return;
 
+        const timeoutId = setTimeout(forward, 5000);
         return () => clearTimeout(timeoutId);
-    }, [activeItemIndex]);
+    }, [activeItemIndex, carouselData.length]);
 
-    const { isLoggedIn } = useAuth();
+    // Se não houver livros, exibe uma mensagem
+    if (carouselData.length === 0) {
+      return <div className="h-[350px] flex items-center justify-center text-gray-500">Nenhum livro no catálogo.</div>
+    }
 
     return (
         <div className="flex items-center gap-3">
-
             <button onClick={back} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-black bg-white hover:bg-green-400 bg-opacity-20 hover:bg-opacity-60 duration-200">
                 <ChevronLeft />
             </button>
 
-            <div className="grid grid-cols-3 gap-20">
-
+            {/* Este é um exemplo de como o card principal ficaria.
+                A estrutura original com múltiplos cards repetidos deve ser atualizada
+                para seguir este padrão em cada botão de exclusão. */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
+                {/* Card do Item Ativo */}
                 <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
                     <div className="relative h-48 w-full">
                         <Image
-                            src={carouselData[getCircularIndex(activeItemIndex, carouselData.length)].coverImage}
-                            alt={carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title}
+                            src={carouselData[getCircularIndex(activeItemIndex)].coverImage}
+                            alt={carouselData[getCircularIndex(activeItemIndex)].title}
                             fill
-                            className="h-48 w-full"
+                            className="object-cover"
                         />
                     </div>
-                    <div className="h-1/2 w-full flex flex-col items-start justify-evenly px-2 text-center">
-                        <h3 className="text-black text-xl text-left">
-                            {carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex, carouselData.length)].author}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex, carouselData.length)].releaseDate}
-                        </p>
+                    <div className="p-4 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 className="text-black text-xl font-semibold truncate">
+                                {carouselData[getCircularIndex(activeItemIndex)].title}
+                            </h3>
+                            <p className="text-gray-500 text-sm">
+                                {carouselData[getCircularIndex(activeItemIndex)].author}
+                            </p>
+                            <p className="text-gray-400 text-xs mt-1">
+                                {carouselData[getCircularIndex(activeItemIndex)].releaseDate}
+                            </p>
+                        </div>
                         {isLoggedIn && (
-                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
+                            <div className="flex justify-end gap-2 pt-2">
                                 <button
-                                    onClick={() =>
-                                        console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
+                                    onClick={() => console.log("Editar livro")}
+                                    className="p-2 rounded-full hover:bg-gray-100"
                                     aria-label="Editar"
                                 >
-                                    <Pencil className="w-8 h-6 text-gray-500 hover:text-blue-600 transition" />
+                                    <Pencil className="w-5 h-5 text-gray-600 hover:text-blue-600" />
                                 </button>
-
                                 <button
-                                    onClick={() =>
-                                        console.log("Excluir livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
+                                    // AÇÃO MODIFICADA: Chama a prop 'onDelete' com o ID correto
+                                    onClick={() => onDelete(carouselData[getCircularIndex(activeItemIndex)].id)}
+                                    className="p-2 rounded-full hover:bg-gray-100"
                                     aria-label="Excluir"
                                 >
-                                    <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
-                                </button>
-                            </div>
-                        )}
-
-                    </div>
-                </div>
-
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
-                    <div className="relative h-48 w-full">
-                        <Image
-                            src={carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].coverImage}
-                            alt={carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].title}
-                            fill
-                            className="h-48 w-full"
-                        />
-                    </div>
-                    <div className="h-1/2 w-full flex flex-col items-start justify-evenly px-2 text-center">
-                        <h3 className="text-black text-xl text-left">
-                            {carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].title}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].author}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].releaseDate}
-                        </p>
-                        {isLoggedIn && (
-                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
-                                <button
-                                    onClick={() =>
-                                        console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Editar"
-                                >
-                                    <Pencil className="w-8 h-6 text-gray-500 hover:text-blue-600 transition" />
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        console.log("Excluir livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Excluir"
-                                >
-                                    <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
+                                    <Trash2 className="w-5 h-5 text-gray-600 hover:text-red-600" />
                                 </button>
                             </div>
                         )}
                     </div>
                 </div>
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
-                    <div className="relative h-48 w-full">
-                        <Image
-                            src={carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].coverImage}
-                            alt={carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].title}
-                            fill
-                            className="h-48 w-full"
-                        />
-                    </div>
-                    <div className="h-1/2 w-full flex flex-col items-start justify-evenly px-2 text-center">
-                        <h3 className="text-black text-xl text-left">
-                            {carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].title}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].author}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].releaseDate}
-                        </p>
-                        {isLoggedIn && (
-                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
-                                <button
-                                    onClick={() =>
-                                        console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Editar"
-                                >
-                                    <Pencil className="w-8 h-6 text-gray-500 hover:text-blue-600 transition" />
-                                </button>
+                {/* Você aplicaria a mesma lógica para os outros cards, se mantiver a estrutura repetida */}
+                {/* Exemplo para o segundo card: */}
+                {/* ... onClick={() => onDelete(carouselData[getCircularIndex(activeItemIndex + 1)].id)} ... */}
 
-                                <button
-                                    onClick={() =>
-                                        console.log("Excluir livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Excluir"
-                                >
-                                    <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
-                    <div className="relative h-48 w-full">
-                        <Image
-                            src={carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].coverImage}
-                            alt={carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].title}
-                            fill
-                            className="h-48 w-full"
-                        />
-                    </div>
-                    <div className="h-1/2 w-full flex flex-col items-start justify-evenly px-2 text-center">
-                        <h3 className="text-black text-xl text-left">
-                            {carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].title}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].author}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].releaseDate}
-                        </p>
-
-                        {isLoggedIn && (
-                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
-                                <button
-                                    onClick={() =>
-                                        console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Editar"
-                                >
-                                    <Pencil className="w-8 h-6 text-gray-500 hover:text-blue-600 transition" />
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        console.log("Excluir livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Excluir"
-                                >
-                                    <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
-                                </button>
-                            </div>
-                        )}
-
-                    </div>
-                </div>
-
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
-                    <div className="relative h-48 w-full">
-                        <Image
-                            src={carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].coverImage}
-                            alt={carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].title}
-                            fill
-                            className="h-48 w-full"
-                        />
-                    </div>
-                    <div className="h-1/2 w-full flex flex-col items-start justify-evenly px-2 text-center">
-                        <h3 className="text-black text-xl text-left">
-                            {carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].title}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].author}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].releaseDate}
-                        </p>
-                        {isLoggedIn && (
-                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
-                                <button
-                                    onClick={() =>
-                                        console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Editar"
-                                >
-                                    <Pencil className="w-8 h-6 text-gray-500 hover:text-blue-600 transition" />
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        console.log("Excluir livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Excluir"
-                                >
-                                    <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
-                                </button>
-                            </div>
-                        )}
-
-                    </div>
-                </div>
-
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
-                    <div className="relative h-88 w-full">
-                        <Image
-                            src={carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].coverImage}
-                            alt={carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].title}
-                            fill
-                            className="h-48 w-full"
-                        />
-                    </div>
-                    <div className="h-1/2 w-full flex flex-col items-start justify-evenly px-2 text-center">
-                        <h3 className="text-black text-xl text-left">
-                            {carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].title}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].author}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            {carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].releaseDate}
-                        </p>
-                        {isLoggedIn && (
-                            <div className="flex container justify-between gap-3 pr-2 w-full  p-0">
-                                <button
-                                    onClick={() =>
-                                        console.log("Editar livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Editar"
-                                >
-                                    <Pencil className="w-8 h-6 text-gray-500 hover:text-blue-600 transition" />
-                                </button>
-
-                                <button
-                                    onClick={() =>
-                                        console.log("Excluir livro:", carouselData[getCircularIndex(activeItemIndex, carouselData.length)].title)
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100"
-                                    aria-label="Excluir"
-                                >
-                                    <Trash2 className="w-8 h-6 text-gray-500 hover:text-red-600 transition" />
-                                </button>
-                            </div>
-                        )}
-
-                    </div>
-                </div>
             </div>
-            <button
-                onClick={forward} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-black bg-white hover:bg-green-400 hover:bg-opacity-60 duration-200">
+
+            <button onClick={forward} className="min-w-[30px] h-[30px] rounded-full grid place-items-center text-black bg-white hover:bg-green-400 hover:bg-opacity-60 duration-200">
                 <ChevronRight />
             </button>
         </div>
