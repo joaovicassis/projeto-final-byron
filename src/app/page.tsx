@@ -3,14 +3,19 @@ import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
 import { useAuth } from "./lib/AuthContext";
 
-import { getLivros, deletarLivro, type Book } from "./lib/livrosService";
+import { getLivros, deletarLivro, editarLivro, type Book, type BookFormData } from "./lib/livrosService";
 
-const BOOKS_PER_PAGE = 6; // 2 linhas x 3 colunas
+const BOOKS_PER_PAGE = 6;
 
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const { isLoggedIn } = useAuth();
+  
+  // --- Estados para o Modal de Edição ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [formData, setFormData] = useState<BookFormData | null>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -22,36 +27,52 @@ export default function Home() {
 
   // --- Lógica de Paginação ---
   const totalPages = Math.ceil(books.length / BOOKS_PER_PAGE);
-  
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1));
-  };
-  
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
-  };
+  const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
+  const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 0));
+  const booksOnCurrentPage = books.slice(currentPage * BOOKS_PER_PAGE, (currentPage * BOOKS_PER_PAGE) + BOOKS_PER_PAGE);
 
-  // Calcula quais livros mostrar na página atual
-  const startIndex = currentPage * BOOKS_PER_PAGE;
-  const endIndex = startIndex + BOOKS_PER_PAGE;
-  const booksOnCurrentPage = books.slice(startIndex, endIndex);
-
-  // --- Lógica de Exclusão ---
+  // --- Lógica do CRUD ---
   const handleDeletarLivro = async (id: string) => {
-    const livroParaDeletar = books.find(b => b.id === id);
-    if (!livroParaDeletar) return;
+    const livro = books.find(b => b.id === id);
+    if (livro && window.confirm(`Tem certeza que deseja excluir "${livro.title}"?`)) {
+      await deletarLivro(id);
+      setBooks(current => current.filter(b => b.id !== id));
+    }
+  };
 
-    const confirmado = window.confirm(`Tem certeza que deseja excluir o livro "${livroParaDeletar.title}"?`);
+  const handleEditarClick = (book: Book) => {
+    setEditingBook(book);
+    setFormData({ // Preenche o formulário com os dados do livro
+      title: book.title,
+      author: book.author,
+      genre: book.genre,
+      releaseDate: book.releaseDate,
+      synopsis: book.synopsis,
+      coverImage: book.coverImage,
+    });
+    setIsModalOpen(true);
+  };
 
-    if (confirmado) {
-      try {
-        await deletarLivro(id);
-        // Atualiza o estado para refletir a exclusão na UI
-        setBooks(currentBooks => currentBooks.filter(b => b.id !== id));
-      } catch (error) {
-        console.error("Falha ao deletar o livro:", error);
-        alert("Ocorreu um erro ao deletar o livro.");
-      }
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!formData) return;
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSaveChanges = async () => {
+    if (!formData || !editingBook) return;
+    
+    try {
+      await editarLivro(editingBook.id, formData);
+      setBooks(currentBooks => 
+        currentBooks.map(b => b.id === editingBook.id ? { ...b, ...formData } : b)
+      );
+      setIsModalOpen(false);
+      setEditingBook(null);
+    } catch (error) {
+      alert("Falha ao salvar as alterações.");
     }
   };
 
@@ -70,23 +91,33 @@ export default function Home() {
         <Carousel
           booksOnPage={booksOnCurrentPage}
           onDelete={handleDeletarLivro}
+          onEdit={handleEditarClick} // <-- Passando a nova função
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
           currentPage={currentPage}
           totalPages={totalPages}
         />
-        
-        <div className="container mt-8 mb-10 w-full flex justify-center">
-          {isLoggedIn && (
-            <button
-              onClick={() => console.log("Lógica para adicionar livro virá aqui")}
-              className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
-            >
-              + Adicionar Livro
-            </button>
-          )}
-        </div>
+        <div className="container mt-8 mb-10 w-full flex justify-center">{/* ... botão de adicionar ... */}</div>
       </section>
+
+      {/* --- Modal de Edição --- */}
+      {isModalOpen && editingBook && formData && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
+            <h2 className="text-2xl font-semibold mb-4">Editar Livro</h2>
+            <div className="space-y-4">
+              <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="Título" className="w-full p-2 border rounded"/>
+              <input type="text" name="author" value={formData.author} onChange={handleFormChange} placeholder="Autor" className="w-full p-2 border rounded"/>
+              <input type="text" name="genre" value={formData.genre} onChange={handleFormChange} placeholder="Gênero" className="w-full p-2 border rounded"/>
+              <textarea name="synopsis" value={formData.synopsis} onChange={handleFormChange} placeholder="Sinopse" className="w-full p-2 border rounded h-24"/>
+            </div>
+            <div className="flex justify-end gap-4 mt-6">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancelar</button>
+              <button onClick={handleSaveChanges} className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">Salvar Alterações</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -2,30 +2,24 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from "lucide-react";
 import { useAuth } from "@/src/app/lib/AuthContext";
 
-// Tipos foram simplificados. O Carousel agora recebe os livros da página atual.
-type BookForCarousel = {
-    id: string;
-    coverImage: string;
-    title: string;
-    author: string;
-    releaseDate: string;
-};
+// O tipo Book completo agora é usado para ter acesso a todos os dados.
+import type { Book } from "@/src/app/lib/livrosService";
 
 type CarouselProps = {
-    booksOnPage: BookForCarousel[];
+    booksOnPage: Book[];
     onDelete: (id: string) => void;
+    onEdit: (book: Book) => void; // <-- ADICIONADO
     onNextPage: () => void;
     onPrevPage: () => void;
     currentPage: number;
     totalPages: number;
 };
 
-const Carousel = ({ booksOnPage, onDelete, onNextPage, onPrevPage, currentPage, totalPages }: CarouselProps) => {
+const Carousel = ({ booksOnPage, onDelete, onEdit, onNextPage, onPrevPage, currentPage, totalPages }: CarouselProps) => {
     const { isLoggedIn } = useAuth();
 
     return (
         <div className="flex items-center justify-center w-full max-w-6xl gap-4">
-            {/* Botão Voltar */}
             <button 
                 onClick={onPrevPage} 
                 disabled={currentPage === 0}
@@ -34,7 +28,6 @@ const Carousel = ({ booksOnPage, onDelete, onNextPage, onPrevPage, currentPage, 
                 <ChevronLeft className="w-6 h-6 text-gray-700" />
             </button>
 
-            {/* A Grade de Livros */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
                 {booksOnPage.length > 0 ? (
                     booksOnPage.map(book => (
@@ -59,7 +52,7 @@ const Carousel = ({ booksOnPage, onDelete, onNextPage, onPrevPage, currentPage, 
                                 {isLoggedIn && (
                                     <div className="flex justify-end gap-2 pt-2 border-t mt-2">
                                         <button
-                                            onClick={() => console.log("Editar:", book.id)}
+                                            onClick={() => onEdit(book)} // <-- AÇÃO MODIFICADA
                                             className="p-2 rounded-full hover:bg-gray-100"
                                             aria-label="Editar"
                                         >
@@ -84,7 +77,6 @@ const Carousel = ({ booksOnPage, onDelete, onNextPage, onPrevPage, currentPage, 
                 )}
             </div>
 
-            {/* Botão Avançar */}
             <button 
                 onClick={onNextPage} 
                 disabled={currentPage >= totalPages - 1}
