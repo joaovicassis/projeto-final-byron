@@ -3,37 +3,50 @@ import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
 import { useAuth } from "./lib/AuthContext";
 
-// Importando do nosso novo serviço!
 import { getLivros, deletarLivro, type Book } from "./lib/livrosService";
 
+const BOOKS_PER_PAGE = 6; // 2 linhas x 3 colunas
+
 export default function Home() {
-  // O estado 'books' agora vai guardar os livros vindos do serviço
   const [books, setBooks] = useState<Book[]>([]);
-  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const { isLoggedIn } = useAuth();
 
-  // useEffect para buscar os livros quando o componente montar
   useEffect(() => {
     const fetchBooks = async () => {
       const data = await getLivros();
       setBooks(data);
     };
     fetchBooks();
-  }, []); // O array vazio [] faz com que isso rode apenas uma vez
+  }, []);
 
-  // A função que realmente lida com a exclusão
+  // --- Lógica de Paginação ---
+  const totalPages = Math.ceil(books.length / BOOKS_PER_PAGE);
+  
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1));
+  };
+  
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  // Calcula quais livros mostrar na página atual
+  const startIndex = currentPage * BOOKS_PER_PAGE;
+  const endIndex = startIndex + BOOKS_PER_PAGE;
+  const booksOnCurrentPage = books.slice(startIndex, endIndex);
+
+  // --- Lógica de Exclusão ---
   const handleDeletarLivro = async (id: string) => {
     const livroParaDeletar = books.find(b => b.id === id);
     if (!livroParaDeletar) return;
 
-    // Mostra a mensagem de confirmação
     const confirmado = window.confirm(`Tem certeza que deseja excluir o livro "${livroParaDeletar.title}"?`);
 
     if (confirmado) {
       try {
-        // Chama a função do nosso serviço para deletar do arquivo
         await deletarLivro(id);
-        // Atualiza o estado local para remover o livro da tela instantaneamente
+        // Atualiza o estado para refletir a exclusão na UI
         setBooks(currentBooks => currentBooks.filter(b => b.id !== id));
       } catch (error) {
         console.error("Falha ao deletar o livro:", error);
@@ -52,13 +65,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full grid place-items-center overflow-hidden gap-8 py-16">
+      <section className="w-full flex flex-col items-center overflow-hidden gap-8 py-16">
         <h1 className="text-5xl md:text-6xl">Catálogo</h1>
         <Carousel
-          activeItemIndex={activeItemIndex}
-          setActiveItemIndex={setActiveItemIndex}
-          carouselData={books} // Usa o estado 'books' agora
-          onDelete={handleDeletarLivro} // Passa a função de deletar como prop
+          booksOnPage={booksOnCurrentPage}
+          onDelete={handleDeletarLivro}
+          onNextPage={handleNextPage}
+          onPrevPage={handlePrevPage}
+          currentPage={currentPage}
+          totalPages={totalPages}
         />
         
         <div className="container mt-8 mb-10 w-full flex justify-center">

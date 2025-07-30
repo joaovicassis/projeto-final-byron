@@ -1,5 +1,14 @@
 [
   {
+    "id": "0",
+    "title": "1984",
+    "author": "George Orwell",
+    "genre": "Distopia",
+    "releaseDate": "08/06/1949",
+    "synopsis": "Um romance distópico que retrata um regime totalitário que manipula e vigia todos os aspectos da vida humana.",
+    "coverImage": "/livros/1984.png"
+  },
+  {
     "id": "1",
     "title": "Dom Casmurro",
     "author": "Machado de Assis",
@@ -10,20 +19,74 @@
   },
   {
     "id": "2",
-    "title": "O Senhor dos Anéis: A Sociedade do Anel",
+    "title": "O Senhor dos Anéis",
     "author": "J.R.R. Tolkien",
     "genre": "Fantasia",
     "releaseDate": "29/07/1954",
-    "synopsis": "A primeira parte da trilogia épica em que Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média.",
+    "synopsis": "Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média de Sauron.",
     "coverImage": "/livros/senhorDosAneis.png"
   },
   {
     "id": "3",
-    "title": "Turma da Mônica",
-    "author": "J.R.R. Tolkien",
-    "genre": "Fantasia",
-    "releaseDate": "29/07/1954",
-    "synopsis": "A primeira parte da trilogia épica em que Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média.",
+    "title": "O Pequeno Príncipe",
+    "author": "Antoine de Saint-Exupéry",
+    "genre": "Fábula",
+    "releaseDate": "06/04/1943",
+    "synopsis": "Uma história poética sobre um piloto que encontra um jovem príncipe que caiu na Terra vindo de um pequeno asteroide.",
+    "coverImage": "/livros/pequenoPrincipe.png"
+  },
+  {
+    "id": "4",
+    "title": "Cem Anos de Solidão",
+    "author": "Gabriel García Márquez",
+    "genre": "Realismo Mágico",
+    "releaseDate": "30/05/1967",
+    "synopsis": "A saga da família Buendía na cidade fictícia de Macondo, atravessando gerações de eventos fantásticos e reais.",
+    "coverImage": "/livros/senhorDosAneis.png"
+  },
+  {
+    "id": "5",
+    "title": "A Revolução dos Bichos",
+    "author": "George Orwell",
+    "genre": "Sátira Política",
+    "releaseDate": "17/08/1945",
+    "synopsis": "Uma alegoria sobre a Revolução Russa, onde os animais de uma fazenda tomam o poder de seus donos humanos.",
     "coverImage": "/livros/cao.png"
+  },
+  {
+    "id": "6",
+    "title": "Fahrenheit 451",
+    "author": "Ray Bradbury",
+    "genre": "Ficção Científica",
+    "releaseDate": "19/10/1953",
+    "synopsis": "Em um futuro onde os livros são proibidos e queimados, um bombeiro começa a questionar seu papel na sociedade.",
+    "coverImage": "/livros/1984.png"
+  },
+  {
+    "id": "7",
+    "title": "O Guia do Mochileiro das Galáxias",
+    "author": "Douglas Adams",
+    "genre": "Comédia Sci-Fi",
+    "releaseDate": "12/10/1979",
+    "synopsis": "A jornada intergaláctica de Arthur Dent após a destruição da Terra para dar lugar a uma via expressa espacial.",
+    "coverImage": "/livros/domCasmurro.png"
+  },
+  {
+    "id": "8",
+    "title": "O Apanhador no Campo de Centeio",
+    "author": "J.D. Salinger",
+    "genre": "Ficção",
+    "releaseDate": "16/07/1951",
+    "synopsis": "A história de Holden Caulfield, um jovem que lida com a angústia e a alienação da adolescência.",
+    "coverImage": "/livros/pequenoPrincipe.png"
+  },
+  {
+    "id": "9",
+    "title": "Orgulho e Preconceito",
+    "author": "Jane Austen",
+    "genre": "Romance",
+    "releaseDate": "28/01/1813",
+    "synopsis": "A história do turbulento relacionamento entre Elizabeth Bennet, filha de um cavalheiro rural, e Fitzwilliam Darcy, um rico aristocrata.",
+    "coverImage": "/livros/senhorDosAneis.png"
   }
 ]
