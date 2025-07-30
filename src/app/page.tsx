@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
 import { useAuth } from "./lib/AuthContext";
 
-import { getLivros, deletarLivro, editarLivro, type Book, type BookFormData } from "./lib/livrosService";
+import { getLivros, deletarLivro, editarLivro, adicionarLivro, type Book, type BookFormData } from "./lib/livrosService";
 
 const BOOKS_PER_PAGE = 6;
 
@@ -12,9 +12,9 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(0);
   const { isLoggedIn } = useAuth();
   
-  // --- Estados para o Modal de Edição ---
+  // --- Estados para o Modal de Edição/Adição ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [editingBook, setEditingBook] = useState<Book | null>(null); // Se for nulo, é adição. Se tiver valor, é edição.
   const [formData, setFormData] = useState<BookFormData | null>(null);
 
   useEffect(() => {
@@ -40,6 +40,19 @@ export default function Home() {
     }
   };
 
+  const handleAdicionarClick = () => {
+    setEditingBook(null); // Garante que não estamos em modo de edição
+    setFormData({ // Reseta o formulário para campos vazios
+      title: '',
+      author: '',
+      genre: '',
+      releaseDate: '',
+      synopsis: '',
+      coverImage: '',
+    });
+    setIsModalOpen(true);
+  };
+
   const handleEditarClick = (book: Book) => {
     setEditingBook(book);
     setFormData({ // Preenche o formulário com os dados do livro
@@ -62,13 +75,20 @@ export default function Home() {
   };
 
   const handleSaveChanges = async () => {
-    if (!formData || !editingBook) return;
+    if (!formData) return;
     
     try {
-      await editarLivro(editingBook.id, formData);
-      setBooks(currentBooks => 
-        currentBooks.map(b => b.id === editingBook.id ? { ...b, ...formData } : b)
-      );
+      if (editingBook) {
+        // Lógica de Edição
+        await editarLivro(editingBook.id, formData);
+        setBooks(currentBooks => 
+          currentBooks.map(b => b.id === editingBook.id ? { id: b.id, ...formData } : b)
+        );
+      } else {
+        // Lógica de Adição
+        const novoLivro = await adicionarLivro(formData);
+        setBooks(currentBooks => [...currentBooks, novoLivro]);
+      }
       setIsModalOpen(false);
       setEditingBook(null);
     } catch (error) {
@@ -91,29 +111,44 @@ export default function Home() {
         <Carousel
           booksOnPage={booksOnCurrentPage}
           onDelete={handleDeletarLivro}
-          onEdit={handleEditarClick} // <-- Passando a nova função
+          onEdit={handleEditarClick}
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
           currentPage={currentPage}
           totalPages={totalPages}
         />
-        <div className="container mt-8 mb-10 w-full flex justify-center">{/* ... botão de adicionar ... */}</div>
+        <div className="container mt-8 mb-10 w-full flex justify-center">
+          {isLoggedIn && (
+            <button
+              onClick={handleAdicionarClick} // <-- AÇÃO MODIFICADA
+              className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
+            >
+              + Adicionar Livro
+            </button>
+          )}
+        </div>
       </section>
 
-      {/* --- Modal de Edição --- */}
-      {isModalOpen && editingBook && formData && (
+      {/* --- Modal de Adição/Edição --- */}
+      {isModalOpen && formData && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
-            <h2 className="text-2xl font-semibold mb-4">Editar Livro</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              {editingBook ? 'Editar Livro' : 'Adicionar Novo Livro'}
+            </h2>
             <div className="space-y-4">
               <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="Título" className="w-full p-2 border rounded"/>
               <input type="text" name="author" value={formData.author} onChange={handleFormChange} placeholder="Autor" className="w-full p-2 border rounded"/>
               <input type="text" name="genre" value={formData.genre} onChange={handleFormChange} placeholder="Gênero" className="w-full p-2 border rounded"/>
+              <input type="text" name="releaseDate" value={formData.releaseDate} onChange={handleFormChange} placeholder="Data de Lançamento" className="w-full p-2 border rounded"/>
+              <input type="text" name="coverImage" value={formData.coverImage} onChange={handleFormChange} placeholder="URL da Imagem da Capa" className="w-full p-2 border rounded"/>
               <textarea name="synopsis" value={formData.synopsis} onChange={handleFormChange} placeholder="Sinopse" className="w-full p-2 border rounded h-24"/>
             </div>
             <div className="flex justify-end gap-4 mt-6">
               <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancelar</button>
-              <button onClick={handleSaveChanges} className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">Salvar Alterações</button>
+              <button onClick={handleSaveChanges} className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">
+                {editingBook ? 'Salvar Alterações' : 'Adicionar Livro'}
+              </button>
             </div>
           </div>
         </div>
