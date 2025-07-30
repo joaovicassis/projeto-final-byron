@@ -37,11 +37,11 @@
   },
   {
     "id": "4",
-    "title": "Cem Anos de Solidão",
-    "author": "Gabriel García Márquez",
-    "genre": "Realismo Mágico",
+    "title": "naruto",
+    "author": "kojima",
+    "genre": "ninjas",
     "releaseDate": "30/05/1967",
-    "synopsis": "A saga da família Buendía na cidade fictícia de Macondo, atravessando gerações de eventos fantásticos e reais.",
+    "synopsis": "ninja que quer ser hokage",
     "coverImage": "/livros/senhorDosAneis.png"
   },
   {
@@ -88,5 +88,14 @@
     "releaseDate": "28/01/1813",
     "synopsis": "A história do turbulento relacionamento entre Elizabeth Bennet, filha de um cavalheiro rural, e Fitzwilliam Darcy, um rico aristocrata.",
     "coverImage": "/livros/senhorDosAneis.png"
+  },
+  {
+    "id": "c9d74c1c-6b01-4d58-9c04-2a04327b0fd1",
+    "title": "Turma da Mônica",
+    "author": "Mauricio de Souza",
+    "genre": "gibi",
+    "releaseDate": "09/05/2005",
+    "synopsis": "",
+    "coverImage": ""
   }
 ]
