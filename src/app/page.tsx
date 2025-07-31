@@ -1,17 +1,15 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
-import Link from "next/link";
 import { useAuth } from "./lib/AuthContext";
-import AuthModal from "../components/AuthModal/AuthModal"; // <-- Novo import
 
-import { 
-  getLivros, 
-  deletarLivro, 
-  editarLivro, 
-  adicionarLivro, 
-  type Book, 
-  type BookFormData 
+import {
+  getLivros,
+  deletarLivro,
+  editarLivro,
+  adicionarLivro,
+  type Book,
+  type BookFormData
 } from "./lib/livrosService";
 
 const BOOKS_PER_PAGE = 6;
@@ -19,12 +17,9 @@ const BOOKS_PER_PAGE = 6;
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const { isLoggedIn, logout } = useAuth(); // <-- logout adicionado
-  
-  // --- Novo estado para login/cadastro ---
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { isLoggedIn } = useAuth(); // apenas checa se está logado
 
-  // --- Estados para o Modal de Edição/Adição ---
+  // Modal de edição/adição de livros
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [formData, setFormData] = useState<BookFormData | null>(null);
@@ -42,7 +37,6 @@ export default function Home() {
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 0));
   const booksOnCurrentPage = books.slice(currentPage * BOOKS_PER_PAGE, (currentPage * BOOKS_PER_PAGE) + BOOKS_PER_PAGE);
 
-  // --- CRUD ---
   const handleDeletarLivro = async (id: string) => {
     const livro = books.find(b => b.id === id);
     if (livro && window.confirm(`Tem certeza que deseja excluir "${livro.title}"?`)) {
@@ -87,11 +81,11 @@ export default function Home() {
 
   const handleSaveChanges = async () => {
     if (!formData) return;
-    
+
     try {
       if (editingBook) {
         await editarLivro(editingBook.id, formData);
-        setBooks(currentBooks => 
+        setBooks(currentBooks =>
           currentBooks.map(b => b.id === editingBook.id ? { id: b.id, ...formData } : b)
         );
       } else {
@@ -107,26 +101,6 @@ export default function Home() {
 
   return (
     <div className="flex-grow bg-green-50">
-
-      {/* Barra de login/cadastro */}
-      <div className="flex justify-end p-4">
-        {!isLoggedIn ? (
-          <button 
-            onClick={() => setIsAuthModalOpen(true)} 
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Entrar / Cadastrar
-          </button>
-        ) : (
-          <button 
-            onClick={logout} 
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Sair
-          </button>
-        )}
-      </div>
-
       <section className="grid place-items-center h-screen">
         <div className="flex flex-col items-center text-center px-4">
           <h1 className="text-5xl md:text-6xl">Sua biblioteca</h1>
@@ -160,7 +134,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modal de Adição/Edição */}
       {isModalOpen && formData && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
@@ -168,12 +141,12 @@ export default function Home() {
               {editingBook ? 'Editar Livro' : 'Adicionar Novo Livro'}
             </h2>
             <div className="space-y-4">
-              <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="Título" className="w-full p-2 border rounded"/>
-              <input type="text" name="author" value={formData.author} onChange={handleFormChange} placeholder="Autor" className="w-full p-2 border rounded"/>
-              <input type="text" name="genre" value={formData.genre} onChange={handleFormChange} placeholder="Gênero" className="w-full p-2 border rounded"/>
-              <input type="text" name="releaseDate" value={formData.releaseDate} onChange={handleFormChange} placeholder="Data de Lançamento" className="w-full p-2 border rounded"/>
-              <input type="text" name="coverImage" value={formData.coverImage} onChange={handleFormChange} placeholder="URL da Imagem da Capa" className="w-full p-2 border rounded"/>
-              <textarea name="synopsis" value={formData.synopsis} onChange={handleFormChange} placeholder="Sinopse" className="w-full p-2 border rounded h-24"/>
+              <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="Título" className="w-full p-2 border rounded" />
+              <input type="text" name="author" value={formData.author} onChange={handleFormChange} placeholder="Autor" className="w-full p-2 border rounded" />
+              <input type="text" name="genre" value={formData.genre} onChange={handleFormChange} placeholder="Gênero" className="w-full p-2 border rounded" />
+              <input type="text" name="releaseDate" value={formData.releaseDate} onChange={handleFormChange} placeholder="Data de Lançamento" className="w-full p-2 border rounded" />
+              <input type="text" name="coverImage" value={formData.coverImage} onChange={handleFormChange} placeholder="URL da Imagem da Capa" className="w-full p-2 border rounded" />
+              <textarea name="synopsis" value={formData.synopsis} onChange={handleFormChange} placeholder="Sinopse" className="w-full p-2 border rounded h-24" />
             </div>
             <div className="flex justify-end gap-4 mt-6">
               <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancelar</button>
@@ -183,11 +156,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-      )}
-
-      {/* Modal de Login/Cadastro */}
-      {isAuthModalOpen && (
-        <AuthModal onClose={() => setIsAuthModalOpen(false)} isOpen={false} />
       )}
     </div>
   );

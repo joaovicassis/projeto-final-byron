@@ -1,9 +1,7 @@
-// components/AuthModal.tsx
 "use client";
 
 import { useState } from "react";
-import { criarConta, fazerLogin } from "../lib/authService";
-import { useAuth } from "../lib/AuthContext";
+import { useAuth } from "@/src/app/lib/AuthContext";
 
 type Props = {
   isOpen: boolean;
@@ -22,25 +20,55 @@ export default function AuthModal({ isOpen, onClose }: Props) {
   const handleSubmit = async () => {
     try {
       setError(null);
+
+      const response = await fetch("/api/usuarios");
+      const usuarios = await response.json();
+
       if (isRegister) {
-        const user = await criarConta(username, password);
-        login(user);
+        const existente = usuarios.find((u: any) => u.nome === username);
+        if (existente) {
+          setError("Usuário já cadastrado.");
+          return;
+        }
+
+        const res = await fetch("/api/usuarios", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nome: username,
+            senha: password,
+          }),
+        });
+
+        const novoUsuario = await res.json();
+        login(novoUsuario);
         onClose();
+
       } else {
-        const user = await fazerLogin(username, password);
+        const user = usuarios.find(
+          (u: any) => u.nome === username && u.senha === password
+        );
+
+        if (!user) {
+          setError("Usuário ou senha inválidos.");
+          return;
+        }
+
         login(user);
         onClose();
       }
     } catch (err: any) {
-      setError(err.message);
+      setError("Erro inesperado: " + err.message);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/60">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
       <div className="bg-white p-6 rounded-lg w-80">
-        <h2 className="text-lg font-bold mb-4">{isRegister ? "Criar Conta" : "Entrar"}</h2>
-        
+        <h2 className="text-lg font-bold mb-4">
+          {isRegister ? "Criar Conta" : "Entrar"}
+        </h2>
+
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
         <input
@@ -58,16 +86,24 @@ export default function AuthModal({ isOpen, onClose }: Props) {
           className="border p-2 w-full mb-4"
         />
 
-        <button onClick={handleSubmit} className="bg-blue-600 text-white px-4 py-2 rounded w-full">
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+        >
           {isRegister ? "Cadastrar" : "Entrar"}
         </button>
 
-        <p className="text-sm mt-4 text-center cursor-pointer text-blue-600"
-           onClick={() => setIsRegister(!isRegister)}>
+        <p
+          className="text-sm mt-4 text-center cursor-pointer text-blue-600"
+          onClick={() => setIsRegister(!isRegister)}
+        >
           {isRegister ? "Já tem conta? Entrar" : "Não tem conta? Cadastre-se"}
         </p>
 
-        <button onClick={onClose} className="mt-4 text-gray-600 text-sm underline block mx-auto">
+        <button
+          onClick={onClose}
+          className="mt-4 text-gray-600 text-sm underline block mx-auto"
+        >
           Cancelar
         </button>
       </div>
