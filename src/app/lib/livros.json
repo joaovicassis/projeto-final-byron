@@ -1,0 +1,101 @@
+[
+  {
+    "id": "0",
+    "title": "1984",
+    "author": "George Orwell",
+    "genre": "Distopia",
+    "releaseDate": "08/06/1949",
+    "synopsis": "Um romance distópico que retrata um regime totalitário que manipula e vigia todos os aspectos da vida humana.",
+    "coverImage": "/livros/1984.png"
+  },
+  {
+    "id": "1",
+    "title": "Dom Casmurro",
+    "author": "Machado de Assis",
+    "genre": "Romance",
+    "releaseDate": "01/01/1899",
+    "synopsis": "A obra narra a história de Bentinho e seu relacionamento com Capitu, marcada por amor, ciúmes e desconfiança.",
+    "coverImage": "/livros/domCasmurro.png"
+  },
+  {
+    "id": "2",
+    "title": "O Senhor dos Anéis",
+    "author": "J.R.R. Tolkien",
+    "genre": "Fantasia",
+    "releaseDate": "29/07/1954",
+    "synopsis": "Frodo parte em uma jornada para destruir o Um Anel e salvar a Terra-média de Sauron.",
+    "coverImage": "/livros/senhorDosAneis.png"
+  },
+  {
+    "id": "3",
+    "title": "O Pequeno Príncipe",
+    "author": "Antoine de Saint-Exupéry",
+    "genre": "Fábula",
+    "releaseDate": "06/04/1943",
+    "synopsis": "Uma história poética sobre um piloto que encontra um jovem príncipe que caiu na Terra vindo de um pequeno asteroide.",
+    "coverImage": "/livros/pequenoPrincipe.png"
+  },
+  {
+    "id": "4",
+    "title": "naruto",
+    "author": "kojima",
+    "genre": "ninjas",
+    "releaseDate": "30/05/1967",
+    "synopsis": "ninja que quer ser hokage",
+    "coverImage": "/livros/senhorDosAneis.png"
+  },
+  {
+    "id": "5",
+    "title": "A Revolução dos Bichos",
+    "author": "George Orwell",
+    "genre": "Sátira Política",
+    "releaseDate": "17/08/1945",
+    "synopsis": "Uma alegoria sobre a Revolução Russa, onde os animais de uma fazenda tomam o poder de seus donos humanos.",
+    "coverImage": "/livros/aRevolucaoDosBichos.png"
+  },
+  {
+    "id": "6",
+    "title": "Fahrenheit 451",
+    "author": "Ray Bradbury",
+    "genre": "Ficção Científica",
+    "releaseDate": "19/10/1953",
+    "synopsis": "Em um futuro onde os livros são proibidos e queimados, um bombeiro começa a questionar seu papel na sociedade.",
+    "coverImage": "/livros/1984.png"
+  },
+  {
+    "id": "7",
+    "title": "O Guia do Mochileiro das Galáxias",
+    "author": "Douglas Adams",
+    "genre": "Comédia Sci-Fi",
+    "releaseDate": "12/10/1979",
+    "synopsis": "A jornada intergaláctica de Arthur Dent após a destruição da Terra para dar lugar a uma via expressa espacial.",
+    "coverImage": "/livros/domCasmurro.png"
+  },
+  {
+    "id": "8",
+    "title": "O Apanhador no Campo de Centeio",
+    "author": "J.D. Salinger",
+    "genre": "Ficção",
+    "releaseDate": "16/07/1951",
+    "synopsis": "A história de Holden Caulfield, um jovem que lida com a angústia e a alienação da adolescência.",
+    "coverImage": "/livros/pequenoPrincipe.png"
+  },
+  {
+    "id": "9",
+    "title": "Orgulho e Preconceito",
+    "author": "Jane Austen",
+    "genre": "Romance",
+    "releaseDate": "28/01/1813",
+    "synopsis": "A história do turbulento relacionamento entre Elizabeth Bennet, filha de um cavalheiro rural, e Fitzwilliam Darcy, um rico aristocrata.",
+    "coverImage": "/livros/senhorDosAneis.png"
+  },
+  {
+    "id": "10",
+    "title": "Turma da Mônica",
+    "author": "Mauricio de Souza",
+    "genre": "gibi",
+    "releaseDate": "09/05/2005",
+    "synopsis": "",
+    "coverImage": "/livros/turmaDaMonica.png"
+  }
+]
