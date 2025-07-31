@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} antialiased `}>
+      <body className={`${inter.className} antialiased flex flex-col min-h-screen `}>
         <AuthProvider> {/* esta linha puxa o simultador de login */}
           <Header />
           {children}

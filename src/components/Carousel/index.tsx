@@ -80,7 +80,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
 
             <div className="grid grid-cols-3 gap-20">
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
+                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col border border-slate-200">
                     <div className="relative h-48 w-full">
                         <Image
                             src={carouselData[getCircularIndex(activeItemIndex, carouselData.length)].coverImage}
@@ -126,7 +126,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                     </div>
                 </div>
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
+                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col border border-slate-200">
                     <div className="relative h-48 w-full">
                         <Image
                             src={carouselData[getCircularIndex(activeItemIndex + 1, carouselData.length)].coverImage}
@@ -171,7 +171,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                     </div>
                 </div>
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
+                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col border border-slate-200">
                     <div className="relative h-48 w-full">
                         <Image
                             src={carouselData[getCircularIndex(activeItemIndex + 2, carouselData.length)].coverImage}
@@ -216,7 +216,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                     </div>
                 </div>
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
+                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col border border-slate-200">
                     <div className="relative h-48 w-full">
                         <Image
                             src={carouselData[getCircularIndex(activeItemIndex + 3, carouselData.length)].coverImage}
@@ -263,7 +263,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                     </div>
                 </div>
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
+                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col border border-slate-200">
                     <div className="relative h-48 w-full">
                         <Image
                             src={carouselData[getCircularIndex(activeItemIndex + 4, carouselData.length)].coverImage}
@@ -309,7 +309,7 @@ const Carousel = ({ activeItemIndex, setActiveItemIndex, carouselData }: Carouse
                     </div>
                 </div>
 
-                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col">
+                <div className="w-[400px] h-[350px] bg-white rounded-3xl overflow-hidden flex flex-col border border-slate-200">
                     <div className="relative h-88 w-full">
                         <Image
                             src={carouselData[getCircularIndex(activeItemIndex + 5, carouselData.length)].coverImage}
