@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Carousel from "../components/Carousel";
-import Header from "../components/Header"; // ✅ agora importamos Header aqui
+import Header from "../components/Header";
 import Link from "next/link";
 import { useAuth } from "./lib/AuthContext";
 import AuthModal from "../components/AuthModal/AuthModal";
@@ -113,21 +113,24 @@ export default function Home() {
     <div className="flex-grow bg-green-50">
       <Header onDestacarClick={scrollToCatalogo} />
 
-      <section className="grid place-items-center h-screen">
-        <div className="flex flex-col items-center text-center px-4">
-          <h1 className="text-5xl md:text-6xl">Sua biblioteca</h1>
-          <p className="text-green-400 text-5xl md:text-6xl">digital e moderna</p>
-          <p className="text-gray-500 text-xl md:text-2xl mt-4">
+      {/* HERO */}
+      <section className="grid place-items-center h-screen px-4 text-center">
+        <div className="flex flex-col items-center">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl">Sua biblioteca</h1>
+          <p className="text-green-400 text-3xl sm:text-4xl md:text-6xl">digital e moderna</p>
+          <p className="text-gray-500 text-base sm:text-lg md:text-2xl mt-4">
             Gerencie, explore e descubra conhecimento de forma simples e elegante.
           </p>
         </div>
       </section>
 
+      {/* CATÁLOGO */}
       <section
         ref={catalogoRef}
-        className="w-full flex flex-col items-center overflow-hidden gap-8 py-16"
+        className="w-full flex flex-col items-center overflow-hidden gap-8 py-16 px-4"
       >
-        <h1 className="text-5xl md:text-6xl">Catálogo</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-6xl">Catálogo</h1>
+
         <Carousel
           booksOnPage={booksOnCurrentPage}
           onDelete={handleDeletarLivro}
@@ -137,11 +140,12 @@ export default function Home() {
           currentPage={currentPage}
           totalPages={totalPages}
         />
-        <div className="container mt-8 mb-10 w-full flex justify-center">
+
+        <div className="container mt-8 mb-10 w-full flex justify-center px-4">
           {isLoggedIn && (
             <button
               onClick={handleAdicionarClick}
-              className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
+              className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200 w-full max-w-xs sm:max-w-sm md:max-w-md"
             >
               + Adicionar Livro
             </button>
@@ -149,10 +153,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modal de Adição/Edição */}
+      {/* MODAL DE ADIÇÃO / EDIÇÃO */}
       {isModalOpen && formData && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
+          <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg max-h-screen overflow-y-auto">
             <h2 className="text-2xl font-semibold mb-4">
               {editingBook ? 'Editar Livro' : 'Adicionar Novo Livro'}
             </h2>
@@ -174,7 +178,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Modal de Login/Cadastro */}
+      {/* MODAL DE AUTENTICAÇÃO */}
       {isAuthModalOpen && (
         <AuthModal onClose={() => setIsAuthModalOpen(false)} isOpen={isAuthModalOpen} />
       )}

@@ -63,38 +63,38 @@ export default function AuthModal({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-      <div className="bg-white p-6 rounded-lg w-80">
-        <h2 className="text-lg font-bold mb-4">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 px-4">
+      <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-sm shadow-lg">
+        <h2 className="text-base sm:text-lg font-bold mb-4 text-center">
           {isRegister ? "Criar Conta" : "Entrar"}
         </h2>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
         <input
           type="text"
           placeholder="Usuário"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-2 rounded"
         />
         <input
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border p-2 w-full mb-4 rounded"
         />
 
         <button
           onClick={handleSubmit}
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700 transition"
         >
           {isRegister ? "Cadastrar" : "Entrar"}
         </button>
 
         <p
-          className="text-sm mt-4 text-center cursor-pointer text-blue-600"
+          className="text-sm mt-4 text-center cursor-pointer text-blue-600 hover:underline"
           onClick={() => setIsRegister(!isRegister)}
         >
           {isRegister ? "Já tem conta? Entrar" : "Não tem conta? Cadastre-se"}

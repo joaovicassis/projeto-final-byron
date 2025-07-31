@@ -20,8 +20,6 @@ export default function EditUserModal({ isOpen, onClose }: Props) {
   const handleUpdate = async () => {
     const body = JSON.stringify({ nome, senha });
 
-    console.log("Dados enviados para o backend:", body);
-
     const res = await fetch(`/api/usuarios/${user?.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -29,28 +27,28 @@ export default function EditUserModal({ isOpen, onClose }: Props) {
     });
 
     const updatedUser = await res.json();
-    login(updatedUser); // atualiza o contexto com os dados novos
+    login(updatedUser);
     onClose();
   };
 
   const handleDelete = async () => {
     const confirmDelete = confirm("Tem certeza que deseja excluir sua conta?");
-
     if (!confirmDelete || !user?.id) return;
 
     await fetch(`/api/usuarios/${user.id}`, {
       method: "DELETE",
     });
 
-    logout(); // limpa o contexto
+    logout();
     onClose();
-    router.push("/"); // opcional: volta pra página inicial
+    router.push("/");
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
-        <h2 className="text-xl font-bold mb-4">Editar Perfil</h2>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+      <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-md shadow-xl">
+        <h2 className="text-base sm:text-xl font-bold mb-4 text-center">Editar Perfil</h2>
+
         <input
           value={nome}
           onChange={(e) => setNome(e.target.value)}
@@ -64,7 +62,8 @@ export default function EditUserModal({ isOpen, onClose }: Props) {
           type="password"
           className="w-full p-2 border rounded mb-4"
         />
-        <div className="flex justify-end gap-2">
+
+        <div className="flex flex-wrap justify-end gap-2">
           <button
             onClick={onClose}
             className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
