@@ -1,7 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
 import Carousel from "../components/Carousel";
+import Header from "../components/Header"; // ✅ agora importamos Header aqui
+import Link from "next/link";
 import { useAuth } from "./lib/AuthContext";
+import AuthModal from "../components/AuthModal/AuthModal";
 
 import {
   getLivros,
@@ -9,7 +13,7 @@ import {
   editarLivro,
   adicionarLivro,
   type Book,
-  type BookFormData
+  type BookFormData,
 } from "./lib/livrosService";
 
 const BOOKS_PER_PAGE = 6;
@@ -17,12 +21,14 @@ const BOOKS_PER_PAGE = 6;
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const { isLoggedIn } = useAuth(); // apenas checa se está logado
+  const { isLoggedIn, logout } = useAuth();
 
-  // Modal de edição/adição de livros
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [formData, setFormData] = useState<BookFormData | null>(null);
+
+  const catalogoRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -99,8 +105,14 @@ export default function Home() {
     }
   };
 
+  const scrollToCatalogo = () => {
+    catalogoRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="flex-grow bg-green-50">
+      <Header onDestacarClick={scrollToCatalogo} />
+
       <section className="grid place-items-center h-screen">
         <div className="flex flex-col items-center text-center px-4">
           <h1 className="text-5xl md:text-6xl">Sua biblioteca</h1>
@@ -111,7 +123,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full flex flex-col items-center overflow-hidden gap-8 py-16">
+      <section
+        ref={catalogoRef}
+        className="w-full flex flex-col items-center overflow-hidden gap-8 py-16"
+      >
         <h1 className="text-5xl md:text-6xl">Catálogo</h1>
         <Carousel
           booksOnPage={booksOnCurrentPage}
@@ -134,6 +149,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Modal de Adição/Edição */}
       {isModalOpen && formData && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
@@ -156,6 +172,11 @@ export default function Home() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de Login/Cadastro */}
+      {isAuthModalOpen && (
+        <AuthModal onClose={() => setIsAuthModalOpen(false)} isOpen={isAuthModalOpen} />
       )}
     </div>
   );
