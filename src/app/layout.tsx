@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { AuthProvider } from "../app/lib/AuthContext";
+import Header from "../components/Header";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,8 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} antialiased flex flex-col min-h-screen `}>
-        <AuthProvider> {/* esta linha puxa o simultador de login */}
+      <body className={`${inter.className} antialiased flex flex-col min-h-screen`}>
+        <AuthProvider>
           <Header />
           {children}
           <Footer />
@@ -31,3 +31,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+

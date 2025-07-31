@@ -2,21 +2,21 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import type { User } from "./authService";
+import type { Usuario } from "./usuariosService"; // <-- substitui User
 
 type AuthContextType = {
-  user: User | null;
+  user: Usuario | null;
   isLoggedIn: boolean;
-  login: (user: User) => void;
+  login: (user: Usuario) => void;
   logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Usuario | null>(null);
 
-  const login = (user: User) => setUser(user);
+  const login = (user: Usuario) => setUser(user);
   const logout = () => setUser(null);
 
   return (
