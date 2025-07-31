@@ -51,7 +51,7 @@
     "genre": "Sátira Política",
     "releaseDate": "17/08/1945",
     "synopsis": "Uma alegoria sobre a Revolução Russa, onde os animais de uma fazenda tomam o poder de seus donos humanos.",
-    "coverImage": "/livros/cao.png"
+    "coverImage": "/livros/aRevolucaoDosBichos.png"
   },
   {
     "id": "6",
@@ -90,12 +90,12 @@
     "coverImage": "/livros/senhorDosAneis.png"
   },
   {
-    "id": "c9d74c1c-6b01-4d58-9c04-2a04327b0fd1",
+    "id": "10",
     "title": "Turma da Mônica",
     "author": "Mauricio de Souza",
     "genre": "gibi",
     "releaseDate": "09/05/2005",
     "synopsis": "",
-    "coverImage": ""
+    "coverImage": "/livros/turmaDaMonica.png"
   }
 ]
