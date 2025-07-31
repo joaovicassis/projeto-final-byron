@@ -1,31 +1,33 @@
-'use client';
+// app/lib/AuthContext.tsx
+"use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-//define o formato do contexto
-interface AuthContextType {
-  isLoggedIn: boolean;
-  login: () => void;
-  logout: () => void;
-}
+import type { User } from "./authService";
 
-//cria o contexto com valor inicial nulo
+type AuthContextType = {
+  user: User | null;
+  isLoggedIn: boolean;
+  login: (user: User) => void;
+  logout: () => void;
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // coloque false ou true para simular logado e deslogado
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
 
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  const login = (user: User) => setUser(user);
+  const logout = () => setUser(null);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro do AuthProvider");
+  if (!context) throw new Error("useAuth deve ser usado dentro de AuthProvider");
   return context;
-};
+}

@@ -3,19 +3,30 @@ import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
 import Link from "next/link";
 import { useAuth } from "./lib/AuthContext";
+import AuthModal from "../components/AuthModal/AuthModal"; // <-- Novo import
 
-import { getLivros, deletarLivro, editarLivro, adicionarLivro, type Book, type BookFormData } from "./lib/livrosService";
+import { 
+  getLivros, 
+  deletarLivro, 
+  editarLivro, 
+  adicionarLivro, 
+  type Book, 
+  type BookFormData 
+} from "./lib/livrosService";
 
 const BOOKS_PER_PAGE = 6;
 
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth(); // <-- logout adicionado
   
+  // --- Novo estado para login/cadastro ---
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   // --- Estados para o Modal de Edição/Adição ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingBook, setEditingBook] = useState<Book | null>(null); // Se for nulo, é adição. Se tiver valor, é edição.
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [formData, setFormData] = useState<BookFormData | null>(null);
 
   useEffect(() => {
@@ -31,7 +42,7 @@ export default function Home() {
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 0));
   const booksOnCurrentPage = books.slice(currentPage * BOOKS_PER_PAGE, (currentPage * BOOKS_PER_PAGE) + BOOKS_PER_PAGE);
 
-  // --- Lógica do CRUD ---
+  // --- CRUD ---
   const handleDeletarLivro = async (id: string) => {
     const livro = books.find(b => b.id === id);
     if (livro && window.confirm(`Tem certeza que deseja excluir "${livro.title}"?`)) {
@@ -41,8 +52,8 @@ export default function Home() {
   };
 
   const handleAdicionarClick = () => {
-    setEditingBook(null); // Garante que não estamos em modo de edição
-    setFormData({ // Reseta o formulário para campos vazios
+    setEditingBook(null);
+    setFormData({
       title: '',
       author: '',
       genre: '',
@@ -55,7 +66,7 @@ export default function Home() {
 
   const handleEditarClick = (book: Book) => {
     setEditingBook(book);
-    setFormData({ // Preenche o formulário com os dados do livro
+    setFormData({
       title: book.title,
       author: book.author,
       genre: book.genre,
@@ -79,13 +90,11 @@ export default function Home() {
     
     try {
       if (editingBook) {
-        // Lógica de Edição
         await editarLivro(editingBook.id, formData);
         setBooks(currentBooks => 
           currentBooks.map(b => b.id === editingBook.id ? { id: b.id, ...formData } : b)
         );
       } else {
-        // Lógica de Adição
         const novoLivro = await adicionarLivro(formData);
         setBooks(currentBooks => [...currentBooks, novoLivro]);
       }
@@ -98,11 +107,33 @@ export default function Home() {
 
   return (
     <div className="flex-grow bg-green-50">
+
+      {/* Barra de login/cadastro */}
+      <div className="flex justify-end p-4">
+        {!isLoggedIn ? (
+          <button 
+            onClick={() => setIsAuthModalOpen(true)} 
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Entrar / Cadastrar
+          </button>
+        ) : (
+          <button 
+            onClick={logout} 
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Sair
+          </button>
+        )}
+      </div>
+
       <section className="grid place-items-center h-screen">
         <div className="flex flex-col items-center text-center px-4">
           <h1 className="text-5xl md:text-6xl">Sua biblioteca</h1>
           <p className="text-green-400 text-5xl md:text-6xl">digital e moderna</p>
-          <p className="text-gray-500 text-xl md:text-2xl mt-4">Gerencie, explore e descubra conhecimento de forma simples e elegante.</p>
+          <p className="text-gray-500 text-xl md:text-2xl mt-4">
+            Gerencie, explore e descubra conhecimento de forma simples e elegante.
+          </p>
         </div>
       </section>
 
@@ -120,7 +151,7 @@ export default function Home() {
         <div className="container mt-8 mb-10 w-full flex justify-center">
           {isLoggedIn && (
             <button
-              onClick={handleAdicionarClick} // <-- AÇÃO MODIFICADA
+              onClick={handleAdicionarClick}
               className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
             >
               + Adicionar Livro
@@ -129,7 +160,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- Modal de Adição/Edição --- */}
+      {/* Modal de Adição/Edição */}
       {isModalOpen && formData && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
@@ -152,6 +183,11 @@ export default function Home() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de Login/Cadastro */}
+      {isAuthModalOpen && (
+        <AuthModal onClose={() => setIsAuthModalOpen(false)} isOpen={false} />
       )}
     </div>
   );
