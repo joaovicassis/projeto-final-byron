@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
+import Link from "next/link";
 import { useAuth } from "./lib/AuthContext";
 
 import { getLivros, deletarLivro, editarLivro, type Book, type BookFormData } from "./lib/livrosService";
@@ -25,7 +26,6 @@ export default function Home() {
     fetchBooks();
   }, []);
 
-  // --- Lógica de Paginação ---
   const totalPages = Math.ceil(books.length / BOOKS_PER_PAGE);
   const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 0));
@@ -120,4 +120,4 @@ export default function Home() {
       )}
     </div>
   );
-};
+}
