@@ -24,8 +24,7 @@ export default function Header() {
             <Link href="/" className="hover:text-green-400 transition-colors">Escritores</Link>
             {isLoggedIn ? (
               <>
-                <Link href="/" className="hover:text-green-400 transition-colors">Usuário</Link>
-                <CircleUser className="w-15 h-15 text-gray-400 hover:text-green-400 transition-colors cursor-pointer" strokeWidth={1.5} />
+                <Link href="/"> <CircleUser className="w-15 h-15 text-gray-400 hover:text-green-400 transition-colors cursor-pointer" strokeWidth={1.5} /></Link> 
               </>
             ) : (
               <button
