@@ -1,8 +1,9 @@
 "use client"
 import { useEffect, useState } from "react";
 import Carousel from "../components/Carousel";
+import Link from "next/link";
 import { useAuth } from "./lib/AuthContext";
-
+import BookFormModal from "../components/BookAddModal";
 import { getLivros, deletarLivro, type Book } from "./lib/livrosService";
 
 const BOOKS_PER_PAGE = 6; // 2 linhas x 3 colunas
@@ -11,6 +12,7 @@ export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const { isLoggedIn } = useAuth();
+  const [isBookAddModalOpen, setIsBookModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -20,7 +22,6 @@ export default function Home() {
     fetchBooks();
   }, []);
 
-  // --- Lógica de Paginação ---
   const totalPages = Math.ceil(books.length / BOOKS_PER_PAGE);
   
   const handleNextPage = () => {
@@ -31,12 +32,10 @@ export default function Home() {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
 
-  // Calcula quais livros mostrar na página atual
   const startIndex = currentPage * BOOKS_PER_PAGE;
   const endIndex = startIndex + BOOKS_PER_PAGE;
   const booksOnCurrentPage = books.slice(startIndex, endIndex);
 
-  // --- Lógica de Exclusão ---
   const handleDeletarLivro = async (id: string) => {
     const livroParaDeletar = books.find(b => b.id === id);
     if (!livroParaDeletar) return;
@@ -46,7 +45,6 @@ export default function Home() {
     if (confirmado) {
       try {
         await deletarLivro(id);
-        // Atualiza o estado para refletir a exclusão na UI
         setBooks(currentBooks => currentBooks.filter(b => b.id !== id));
       } catch (error) {
         console.error("Falha ao deletar o livro:", error);
@@ -79,7 +77,7 @@ export default function Home() {
         <div className="container mt-8 mb-10 w-full flex justify-center">
           {isLoggedIn && (
             <button
-              onClick={() => console.log("Lógica para adicionar livro virá aqui")}
+              onClick={() => setIsBookModalOpen(true)}
               className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-green-700 transition duration-200"
             >
               + Adicionar Livro
@@ -87,6 +85,8 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      <BookFormModal isOpen={isBookAddModalOpen} onClose={() => setIsBookModalOpen(false)} />
     </div>
   );
-};
+}
